@@ -1,0 +1,8 @@
+----- Installation -----
+
+Copy the contents of src to a cgi-enabled directory on your web server and access <scriptroot>/"bookmarks.pl" in your browser.
+
+----- Management ----- 
+
+To add/remove/recategorize bookmarks visit <scriptroot>/"cp.pl", ensure bookmarks.db is writable
+
