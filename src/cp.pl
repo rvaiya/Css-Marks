@@ -41,8 +41,8 @@ elsif ($args{'link'} && $args{'linkname'} && $args{'category'})
 	my $linkname=uri_unescape($args{'linkname'});
 	my $link=uri_unescape($args{'link'});
 	my $category=uri_unescape($args{'category'});
-	$category=~s/\+/ /;
-	$linkname=~s/\+/ /;
+	$category=~s/\+/ /g;
+	$linkname=~s/\+/ /g;
 	removelink($link, $bmarks);
 	addlink($category, $linkname, $link, $bmarks);
 	writebmarks($bmarks, $bookmarkdb);
