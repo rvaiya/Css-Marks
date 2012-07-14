@@ -1,10 +1,6 @@
-{ Search }
-Google: http://google.com
-Yahoo: http://yahoo.com
-Bing: http://bing.com
-{ Programming }
-Perl: http://perl.com
-{ News }
-Slashdot: http://slashdot.com
-New York Times: http://nyt.com
-Huffington Post: http://huffington.com
+{ mark }
+Bookmark Manager: http://ghost/~qpls/bookmarks/cp.pl
+{ Harold }
+mark - Google Search: http://www.google.ca/search?sourceid=chrome&client=ubuntu&channel=cs&ie=UTF-8&q=mark
+{ null }
+null: http://www.megasolutions.net/perl/Escaping-backslashes-in-HERE-documents_-78884.aspx

@@ -19,7 +19,7 @@ sub parsebmarks {
 	return \%bmarks;
 }
 
-sub writebookmarks {
+sub writebmarks {
 	(my $bmarkarray, my $bmarkfile)=@_;
 	open(BMARK, ">", $bmarkfile) || die "Unable to open $bmarkfile for writing\n";
 	foreach (keys %$bmarkarray) {
@@ -56,7 +56,7 @@ sub linkexists {
 	my ($link, $bmarks)=@_;
 	foreach (keys %$bmarks) {
 		foreach (@{$bmarks->{$_}}) {
-			return 1 if ($_->[1] eq $link);
+			return $_->[0] if ($_->[1] eq $link);
 		}
 	}
 	return 0;
@@ -66,7 +66,7 @@ sub linknameexists {
 	my ($linkname, $bmarks)=@_;
 	foreach (keys %$bmarks) {
 		foreach (@{$bmarks->{$_}}) {
-			return 1 if ($_->[0] eq $link);
+			return $_->[1] if ($_->[0] eq $link);
 		}
 	}
 	return 0;

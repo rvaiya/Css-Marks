@@ -33,7 +33,7 @@ die "Unable to parse $bookmarkdb\n" unless $bmarks;
 if ($args{'remove'}) {
 	my $remove=uri_unescape($args{'remove'});
 	removelink($remove, $bmarks);
-	writebookmarks($bmarks, $bookmarkdb);
+	writebmarks($bmarks, $bookmarkdb);
 }
 
 elsif ($args{'link'} && $args{'linkname'} && $args{'category'})
@@ -45,15 +45,33 @@ elsif ($args{'link'} && $args{'linkname'} && $args{'category'})
 	$linkname=~s/\+/ /;
 	removelink($link, $bmarks);
 	addlink($category, $linkname, $link, $bmarks);
-	writebookmarks($bmarks, $bookmarkdb);
+	writebmarks($bmarks, $bookmarkdb);
 }
 
-print <<"EOF";
+print <<'EOF';
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<script type="text/javascript">
+		function validate() {
+			var form=document.getElementById("addlinkform");
+			var regurl=new RegExp("^((http|ftp|https|javascript)://|www.).*");
+			if (!(form.category.value && form.link.value && form.linkname.value)) {
+				alert ("Fill in all fields");
+			}
+			else if (!regurl.test(form.link.value)) {
+				alert("Invalid link (must have protocol prepended eg http://, ftp://, etc..)");
+			} else {
+				form.submit();
+			}
+	 	}
+	function genbookmarklet() {
+		var bmarklet='javascript:function f() { var linkname=prompt("Link Name", document.title); if (linkname == null || linkname == "") return; var category=prompt("Category"); if (category == null || category == "") return; var m=new XMLHttpRequest(); m.open("GET", "'+document.location.href.replace(/\/[^\/]*$/,"")+'/addlink.pl?link="+encodeURIComponent(document.location.href)+"&linkname="+encodeURIComponent(linkname)+"&category="+encodeURIComponent(category)); m.send(); }f();';
+
+		document.getElementById("bookmarklettext").style.display="block";
+		document.getElementById("bookmarklettext").innerHTML=bmarklet;
+	}
 	</script>
-	<style type=\"text/css\">
+	<style type="text/css">
 		.bmark {
 			list-style-type:none;
 			overflow:hidden;
@@ -76,10 +94,10 @@ print <<"EOF";
 			position:fixed;
 			bottom:0px;
 			right:0px;
-			width:300px;
+			width:280px;
 		}
 
-		#addlink > span {
+		#addlink span {
 			overflow:hidden;
 			display:block;
 		}
@@ -87,7 +105,17 @@ print <<"EOF";
 		#addlink input {
 			float:right;
 		}
+		#bookmarklet {
+			position:absolute;
+			top:0px;
+			right:0px;
+			width:280px;
+		}
 
+		#bookmarklettext {
+			display:none;
+			width:90%;
+		}
 	</style>
 	<title>Bookmark Manager</title>
 </head>
@@ -108,7 +136,7 @@ foreach my $category (sort keys %$bmarks) {
 				print "<input type=\"hidden\" name=\"link\" value=\"$link\">";
 				print "<input type=\"hidden\" name=\"linkname\" value=\"$linkname\">";
 				print "<select name=\"category\" onChange=\"this.form.submit()\">";
-					foreach (keys %$bmarks) {
+					foreach (sort keys %$bmarks) {
 						print $_ eq $category ? "<option selected=\"selected\">$_</option>" : "<option>$_</option>"; 
 					}
 				print "</select>";
@@ -128,11 +156,18 @@ print "</div>\n";
 
 
 print <<"EOF";
-<form id="addlink" method="get" action="cp.pl">
+<div id="bookmarklet">
+<button onclick="genbookmarklet()">Generate Bookmarklet</button>
+<textarea rows="10" id="bookmarklettext"></textarea>
+</div>
+
+<div id="addlink">
+<form id="addlinkform" method="get" action="cp.pl">
 	<span>Category: <input type="text" name="category"/></span>
 	<span>Name: <input type="text" name="linkname"/></span>
 	<span>Link: <input type="text" name="link"/></span>
-	<input type="submit"/>
+	<input type="button" onclick="validate()" value="Add Link"/>
 </form>
+</div>
 EOF
 print "</body>\n</html>\n";

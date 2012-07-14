@@ -2,7 +2,16 @@
 
 Copy the contents of src to a cgi-enabled directory on your web server and access <scriptroot>/"bookmarks.pl" in your browser.
 
------ Management ----- 
+----- Usage ----- 
 
-To add/remove/recategorize bookmarks visit <scriptroot>/"cp.pl", ensure bookmarks.db is writable
+To add/remove/recategorize bookmarks visit <scriptroot>/"cp.pl".
 
+To add a bookmark from a given page paste the bookmarkelt code
+generated on the "cp.pl" page into a bookmark *in your browser*
+and use the bookmark to add items to your bookmarks page.
+
+Note: If you are having trouble adding bookmarks, ensure bookmarks.db is writable.
+
+----- Bugs ----- 
+
+Please email any bugs to r.vaiya@gmail.com
