@@ -1,7 +1,7 @@
 { Search }
-Google: http://google.com
-Yahoo: http://yahoo.com
+Google: "http://google.com"
+Yahoo: "http://yahoo.com"
 
 { News }
-Slashdot: http://slashdot.org
-New York Times: http://nyt.com
+Slashdot: "http://slashdot.org"
+New York Times: "http://nyt.com"
