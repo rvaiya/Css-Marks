@@ -10,7 +10,7 @@ sub parsebmarks {
 			$category = $1;
 			$bmarks{$category}=[];
 		}
-		elsif ($_ =~ /^\s*(.*?)\s*:\s*([\S].*)\s*$/) {
+		elsif ($_ =~ /^\s*(.*?)\s*:\s*"(.*)"/) {
 			push @{$bmarks{$category}}, [$1, $2];
 		}
 	
@@ -27,7 +27,7 @@ sub writebmarks {
 		foreach (@{$bmarkarray->{$_}}) {
 			my $linkname=$_->[0];
 			my $link=$_->[1];
-			print BMARK "$linkname: $link\n";
+			print BMARK "$linkname: \"$link\"\n";
 		}
 	}
 	close(BMARK);
