@@ -3,10 +3,11 @@ use strict;
 use warnings;
 use URI::Escape;
 require "common.pl";
-
+my $SCRIPT_PATH="http://".$ENV{"SERVER_NAME"}.$ENV{"SCRIPT_NAME"};
+$SCRIPT_PATH=~s/\/[^\/]*$/\//;
 sub getargs {
 	my %args=();
-	foreach (split "&", $ENV{"QUERY_STRING"}) {
+	foreach (split "&", <STDIN>) {
 		my ($prop, $val)=split "=", $_;
 		$args{$prop}=$val;
 	}
@@ -64,12 +65,6 @@ print <<'EOF';
 				form.submit();
 			}
 	 	}
-	function genbookmarklet() {
-		var bmarklet='javascript:function f() { var linkname=prompt("Link Name", document.title); if (linkname == null || linkname == "") return; var category=prompt("Category"); if (category == null || category == "") return; var m=new XMLHttpRequest(); m.open("GET", "'+document.location.href.replace(/\/[^\/]*$/,"")+'/addlink.pl?link="+encodeURIComponent(document.location.href)+"&linkname="+encodeURIComponent(linkname)+"&category="+encodeURIComponent(category)); m.send(); }f();';
-
-		document.getElementById("bookmarklettext").style.display="block";
-		document.getElementById("bookmarklettext").innerHTML=bmarklet;
-	}
 	</script>
 	<style type="text/css">
 		.bmark {
@@ -132,7 +127,7 @@ foreach my $category (sort keys %$bmarks) {
 		$linkname=~s/\+/ /g;
 		print "<li class=\"bmark\">$linkname";
 		print "<div class=\"linkmgmt\">";
-			print "<form action=\"cp.pl\" method=\"get\">";
+			print "<form action=\"cp.pl\" method=\"post\">";
 				print "<input type=\"hidden\" name=\"link\" value=\"$link\">";
 				print "<input type=\"hidden\" name=\"linkname\" value=\"$linkname\">";
 				print "<select name=\"category\" onChange=\"this.form.submit()\">";
@@ -142,7 +137,7 @@ foreach my $category (sort keys %$bmarks) {
 				print "</select>";
 			print "</form>";
 
-			print "<form>";
+			print "<form action=\"cp.pl\" method=\"post\">";
 				print "<input type=\"hidden\" name=\"remove\" value=\"$link\"/>";
 				print "<input type=\"Submit\" value=\"Remove\"/>";
 			print "</form>";
@@ -157,12 +152,11 @@ print "</div>\n";
 
 print <<"EOF";
 <div id="bookmarklet">
-<button onclick="genbookmarklet()">Generate Bookmarklet</button>
-<textarea rows="10" id="bookmarklettext"></textarea>
+<button onclick="document.getElementById('bookmarklettext').style.display='block';">Generate Bookmarklet</button>
+<textarea rows="10" id="bookmarklettext" readonly="readonly">javascript:function f() { var linkname=prompt("Link Name", document.title); if (linkname == null || linkname == "") return; var category=prompt("Category"); if (category == null || category == "") return; var m=new XMLHttpRequest(); m.open("POST", "${SCRIPT_PATH}addlink.pl", false); m.send("link="+encodeURIComponent(document.location.href)+"&linkname="+encodeURIComponent(linkname)+"&category="+encodeURIComponent(category)); }f();</textarea>
 </div>
-
 <div id="addlink">
-<form id="addlinkform" method="get" action="cp.pl">
+<form id="addlinkform" method="post" action="cp.pl">
 	<span>Category: <input type="text" name="category"/></span>
 	<span>Name: <input type="text" name="linkname"/></span>
 	<span>Link: <input type="text" name="link"/></span>

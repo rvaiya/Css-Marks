@@ -3,7 +3,7 @@ require "common.pl";
 use URI::Escape;
 my $bookmarkdb="bookmarks.db";
 my %args;
-foreach (split "&", $ENV{"QUERY_STRING"}) {
+foreach (split "&", <STDIN>) {
 	my ($prop, $val)=split "=",$_;
 	$args{uri_unescape($prop)}=uri_unescape($val);
 }
